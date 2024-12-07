@@ -1,40 +1,51 @@
-import React from 'react';
-import { Text } from '@react-three/drei';
-import { MeshStandardMaterial, PlaneGeometry, Mesh, GridHelper, AxesHelper } from 'three';
+import React, { useEffect } from 'react';
+import { MeshStandardMaterial, TextureLoader, RepeatWrapping } from 'three';
+import { useLoader } from '@react-three/fiber';
 
-function PlaneWithGrid() {
+export default function Floor({ 
+  color = '##4A796D',
+  roughness = 0.5,
+  metalness = 0.4,
+  envMapIntensity = 1,
+  size = [50, 50],
+  textureMap = '/Textures/floor/floor1.jpg',
+  normalMap = '/Textures/floor/floor1.jpg',
+  roughnessMap = '/Textures/floor/floor1.jpg',
+  repeat = [0.8, 1]
+}) {
+  const [
+    baseTexture,
+    normalTexture,
+    roughnessTexture
+  ] = useLoader(TextureLoader, [
+    textureMap,
+    normalMap,
+    roughnessMap
+  ]);
+
+  useEffect(() => {
+    [baseTexture, normalTexture, roughnessTexture].forEach(texture => {
+      if (texture) {
+        texture.wrapS = texture.wrapT = RepeatWrapping;
+        texture.repeat.set(repeat[0], repeat[1]);
+      }
+    });
+  }, [baseTexture, normalTexture, roughnessTexture, repeat]);
+
+  const floorMaterial = new MeshStandardMaterial({
+    color,
+    roughness,
+    metalness,
+    envMapIntensity,
+    map: baseTexture,
+    normalMap: normalTexture,
+    roughnessMap: roughnessTexture
+  });
+
   return (
-    <>
-      {/* Reflective Floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-        <planeGeometry args={[10, 10]} />
-        <meshStandardMaterial 
-          color="azure" 
-          metalness={1}  // Makes the surface shiny
-          roughness={0.1} // Low roughness for a glossy effect
-          envMapIntensity={1} // Increases the intensity of reflections
-          reflectivity={1} // Makes the material reflective
-        />
-      </mesh>
-
-      {/* Grid Helper */}
-      <gridHelper args={[100, 100, 'black', 'gray']} /> {/* Size, Divisions */}
-
-      {/* Axes Helper */}
-      <axesHelper args={[5]} /> {/* Length of the axes */}
-
-      {/* Labels for Axes */}
-      <Text position={[5.5, 0.1, 0]} fontSize={0.3} color="red">
-        X
-      </Text>
-      <Text position={[0, 5.5, 0]} fontSize={0.3} color="green">
-        Y
-      </Text>
-      <Text position={[0, 0.1, 5.5]} fontSize={0.3} color="blue">
-        Z
-      </Text>
-    </>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, 0]} receiveShadow>
+      <planeGeometry args={size} />
+      <meshStandardMaterial {...floorMaterial} />
+    </mesh>
   );
 }
-
-export default PlaneWithGrid;
