@@ -39,7 +39,7 @@ const GlassWithBubbles = () => {
         <meshPhysicalMaterial
           color={0xffffff}
           transparent={true}
-          opacity={0.5}
+          opacity={0.1}
           transmission={0.9}
           thickness={0.1}
           roughness={0.1}

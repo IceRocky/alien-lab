@@ -3,15 +3,15 @@ import { MeshStandardMaterial, TextureLoader, RepeatWrapping } from 'three';
 import { useLoader } from '@react-three/fiber';
 
 export default function Floor({ 
-  color = '##4A796D',
-  roughness = 0.5,
-  metalness = 0.4,
-  envMapIntensity = 1,
+  color = 'white',
+  roughness = 0.8,
+  metalness = 0,
+  envMapIntensity = 20,
   size = [50, 50],
   textureMap = '/Textures/floor/floor1.jpg',
   normalMap = '/Textures/floor/floor1.jpg',
   roughnessMap = '/Textures/floor/floor1.jpg',
-  repeat = [0.8, 1]
+  repeat = [20, 20]
 }) {
   const [
     baseTexture,
@@ -39,11 +39,13 @@ export default function Floor({
     envMapIntensity,
     map: baseTexture,
     normalMap: normalTexture,
-    roughnessMap: roughnessTexture
+    roughnessMap: roughnessTexture,
+    flatShading: false,
+    side: 2
   });
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, 0]} receiveShadow>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]} receiveShadow>
       <planeGeometry args={size} />
       <meshStandardMaterial {...floorMaterial} />
     </mesh>
