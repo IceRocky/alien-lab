@@ -26,7 +26,7 @@ const SceneLighting = () => {
   const { scene } = useThree();
 
   // Spotlight setup
-  const spotLight = new THREE.SpotLight('#00ffff', 50);
+  const spotLight = new THREE.SpotLight('#ffffff', 50);
   spotLight.position.set(0, 10, 0);
   spotLight.angle = 2;
   spotLight.penumbra = 2;
