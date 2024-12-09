@@ -1,62 +1,47 @@
 import React from 'react';
+import { useRef } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+
+
 import * as THREE from 'three';
+import { RectAreaLightHelper } from 'three/examples/jsm/Addons.js';
 import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
 
-const LightEffect = () => {
-  // Initialize RectAreaLight uniforms
+
+const RectAreaLightEffect = ({ position, color }) => {
+  const { scene } = useThree();
   RectAreaLightUniformsLib.init();
 
+  const rectLight = new THREE.RectAreaLight(color, 150, 0.3, 7.5);
+  rectLight.position.set(position[0], position[1], position[2]);
+  rectLight.lookAt(0, position[1], 0);
+  
+  scene.add(rectLight);
+  scene.add(new RectAreaLightHelper(rectLight));
+
+  return null;
+};
+
+const SceneLighting = () => {
+  const { scene } = useThree();
+
+  // Spotlight setup
+  const spotLight = new THREE.SpotLight('#00ffff', 50);
+  spotLight.position.set(0, 10, 0);
+  spotLight.angle = 2;
+  spotLight.penumbra = 2;
+  spotLight.castShadow = true;
+  scene.add(spotLight);
+
+  // Directional light setup
+  const directionalLight = new THREE.DirectionalLight('#ffffff', 0.3);
+  directionalLight.position.set(0, 5, 5);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
+
   return (
-    <>
-      <ambientLight intensity={0.8} />
-      {/* <directionalLight 
-        position={[20, 20, 100]} 
-        intensity={3}
-        castShadow
-      /> */}
-      <spotLight
-        position={[0, 10, 0]}
-        angle={0.5}
-        penumbra={1}
-        intensity={200}
-        color="#00ffff"
-        distance={50}
-      />
-      {/* <rectAreaLight 
-        position={[20, -5, 0]}  // East position
-        width={1}              
-        height={5}            
-        intensity={50} 
-        color="blue" 
-        rotation={[0, Math.PI/2, 0]}  // Rotated to point along y-axis
-      />
-      <rectAreaLight 
-        position={[-10, 5, 0]}  // West position
-        width={4}              
-        height={10}             
-        intensity={15} 
-        color="#ff0000" 
-        rotation={[Math.PI / 2, 0, 0]}  // Rotated to point along y-axis
-      />
-      <rectAreaLight 
-        position={[0, 5, 10]}  // North position
-        width={4}             
-        height={10}            
-        intensity={15} 
-        color="#ff0000" 
-        rotation={[Math.PI / 2, 0, 0]}  // Rotated to point along y-axis
-      />
-      <rectAreaLight 
-        position={[0, 5, -10]}  // South position
-        width={4}              
-        height={10}             
-        intensity={15} 
-        color="#ff0000" 
-        rotation={[Math.PI / 2, 0, 0]}  // Rotated to point along y-axis
-      /> */}
-      <fog attach="fog" args={['#000000', 10, 50]} />
-    </>
+    <ambientLight intensity={0.3} />
   );
 };
 
-export default LightEffect; 
+export { RectAreaLightEffect, SceneLighting };

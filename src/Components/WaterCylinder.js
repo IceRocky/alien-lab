@@ -5,11 +5,11 @@ import *as THREE from 'three';
 const WaterCylinder = () => {
   const cylinderRef = useRef();
   const waterRef = useRef();
-  const bubbleRefs = useRef([...Array(15)].map(() => ({
+  const bubbleRefs = useRef([...Array(75)].map(() => ({
     ref: React.createRef(),
-    speed: Math.random() * 0.01 + 0.005,
+    speed: Math.random() * 0.02 + 0.01, 
     offset: Math.random() * Math.PI * 2,
-    scale: Math.random() * 0.15 + 0.05
+    scale: Math.random() * 0.5 + 0.05
   })));
 
   useFrame((state) => {
@@ -80,19 +80,19 @@ const WaterCylinder = () => {
           key={i}
           ref={bubble.ref}
           position={[
-            (Math.random() - 0.5) * 1.5,
-            Math.random() * -4,
-            (Math.random() - 0.5) * 1.5
+            Math.random() * 2 - 1,
+            Math.random() * 2 - 2,
+            Math.random() * 2 - 1
           ]}
           scale={bubble.scale}
         >
-          <sphereGeometry args={[0.2, 16, 16]} />
+          <sphereGeometry args={[0.2, 32, 32]} />
           <meshPhysicalMaterial
             color="#ffffff"
             emissive="#00ffff"
-            emissiveIntensity={0.5}
+            emissiveIntensity={2}
             transparent
-            opacity={0.2}
+            opacity={0.5}
             roughness={0}
             metalness={0.2}
             clearcoat={1}
